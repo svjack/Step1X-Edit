@@ -84,14 +84,11 @@ We are releasing [GEdit-Bench](https://huggingface.co/datasets/stepfun-ai/GEdit-
 
 ## 4. Citation
 ```
-@misc{liu2025step1xeditpracticalframeworkgeneral,
+@misc{liu2025step1x-edit,
       title={Step1X-Edit: A Practical Framework for General Image Editing}, 
       author={Shiyu Liu and Yucheng Han and Peng Xing and Fukun Yin and Rui Wang and Wei Cheng and Jiaqi Liao and Yingming Wang and Honghao Fu and Chunrui Han and Guopeng Li and Yuang Peng and Quan Sun and Jingwei Wu and Yan Cai and Zheng Ge and Ranchen Ming and Lei Xia and Xianfang Zeng and Yibo Zhu and Binxing Jiao and Xiangyu Zhang and Gang Yu and Daxin Jiang},
       year={2025},
-      eprint={2504.17761},
-      archivePrefix={arXiv},
-      primaryClass={cs.CV},
-      url={https://arxiv.org/abs/2504.17761}, 
+      journal={arXiv preprint arXiv:2504.17761},
 }
 ```
 
