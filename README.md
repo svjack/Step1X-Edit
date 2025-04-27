@@ -13,12 +13,13 @@
 
 
 ## 🔥🔥🔥 News!!
+* Apr 27, 2025: 🎉 With community support, we update the inference code and model weights of Step1X-Edit-FP8. [meimeilook/Step1X-Edit-FP8](https://huggingface.co/meimeilook/Step1X-Edit-FP8) & [rkfg/Step1X-Edit-FP8](https://huggingface.co/rkfg/Step1X-Edit-FP8).
 * Apr 26, 2025: 🎉 Step1X-Edit is now live — you can try editing images directly in the online demo! [Online Demo](https://huggingface.co/spaces/stepfun-ai/Step1X-Edit)
 * Apr 25, 2025: 👋 We release the evaluation code and benchmark data of Step1X-Edit. [Download GEdit-Bench](https://huggingface.co/datasets/stepfun-ai/GEdit-Bench)
 * Apr 25, 2025: 👋 We release the inference code and model weights of Step1X-Edit. [ModelScope](https://www.modelscope.cn/models/stepfun-ai/Step1X-Edit) & [HuggingFace](https://huggingface.co/stepfun-ai/Step1X-Edit) models.
-* Apr 25, 2025: 🎉 We have made our technical report available as open source. [Read](https://arxiv.org/abs/2504.17761)
+* Apr 25, 2025: 👋 We have made our technical report available as open source. [Read](https://arxiv.org/abs/2504.17761)
 
-## Image Edit Demos
+<!-- ## Image Edit Demos -->
 
 <div align="center">
 <img width="720" alt="demo" src="assets/image_edit_demo.gif">
@@ -26,8 +27,27 @@
 </div>
 
 
+## 🧩 Community Contributions
+
+If you develop/use Step1X-Edit in your projects, welcome to let us know.
+
+- FP8 model weights: [meimeilook/Step1X-Edit-FP8](https://huggingface.co/meimeilook/Step1X-Edit-FP8) by [meimeilook](https://huggingface.co/meimeilook);  [rkfg/Step1X-Edit-FP8](https://huggingface.co/rkfg/Step1X-Edit-FP8) by [rkfg](https://huggingface.co/rkfg)
+
+
+## 📑 Open-source Plan
+- [x] Inference & Checkpoints
+- [x] Online demo (Gradio)
+- [ ] Diffusers 
+- [x] FP8 Quantified weight
+- [ ] ComfyUI
+
+
+
 ## 1. Introduction
-We release a state-of-the-art image editing model, **Step1X-Edit**, which can provide comparable performance against the closed-source models like GPT-4o and Gemini2 Flash.  More specifically, we adopt the Multimodal LLM to process the reference image and user's editing instruction. A latent embedding has been extracted and integrated with a diffusion image decoder to obtain  the target image. To train the model, we build a data generation pipeline to produce a high-quality dataset. For evaluation, we develop the GEdit-Bench, a novel benchmark rooted in real-world user instructions. Experimental results on GEdit-Bench demonstrate that Step1X-Edit outperforms existing open-source baselines by a substantial margin and approaches the performance of leading proprietary models, thereby making significant contributions to the field of image editing. More details please refer to our [technical report](https://arxiv.org/abs/2504.17761).
+we introduce a state-of-the-art image editing model, **Step1X-Edit**, which aims to provide comparable performance against the closed-source models like GPT-4o and Gemini2 Flash. 
+More specifically, we adopt the Multimodal LLM to process the reference image and user's editing instruction. A latent embedding has been extracted and integrated with a diffusion image decoder to obtain  the target image. To train the model, we build a data generation pipeline to produce a high-quality dataset. 
+For evaluation, we develop the GEdit-Bench, a novel benchmark rooted in real-world user instructions. Experimental results on GEdit-Bench demonstrate that Step1X-Edit outperforms existing open-source baselines by a substantial margin and approaches the performance of leading proprietary models, thereby making significant contributions to the field of image editing. 
+More details please refer to our [technical report](https://arxiv.org/abs/2504.17761).
 
 
 ## 2. Model Usage
@@ -35,15 +55,16 @@ We release a state-of-the-art image editing model, **Step1X-Edit**, which can pr
 
 The following table shows the requirements for running Step1X-Edit model (batch size = 1, w/o cfg distillation) to edit images:
 
-|     Model    |  height/width |  Peak GPU Memory | 28 steps w flash-attn |
-|:------------:|:------------:|:------------:|:------------:|
-| Step1X-Edit   |        512x512      |  42.5 GB | 5 s |
-| Step1X-Edit   |        768x768      |  46.5 GB | 11 s | 
-| Step1X-Edit   |        1024x1024      |  49.8 GB | 22 s |
+|     Model    |     Peak GPU Memory (512 / 786 / 1024)  | 28 steps w flash-attn(512 / 786 / 1024) |
+|:------------:|:------------:|:------------:|
+| Step1X-Edit   |                42.5GB / 46.5GB / 49.8GB  | 5s / 11s / 22s |
+| Step1X-Edit-FP8   |             31GB / 31.5GB/ 34GB     | 6.8s / 13.5s / 25s | 
+| Step1X-Edit + offload   |       25.9GB / 27.3GB / 29.1GB | 40.6s / 54.1s / 63.2s |
+| Step1X-Edit-FP8 + offload   |   18GB / 18GB / 18GB | 35s / 40s / 51s |
 
 * The model is tested on one H800 GPUs.
-* Tested operating system: Linux
-* We recommend to use GPUs with 80GB of memory for better generation quality.
+* We recommend to use GPUs with 80GB of memory for better generation quality and efficiency.
+* The Step1X-Edit-FP8 model we tested comes from [meimeilook/Step1X-Edit-FP8](https://huggingface.co/meimeilook/Step1X-Edit-FP8).
 
 
 ### 2.2 Dependencies and Installation
@@ -75,8 +96,9 @@ After downloading the [model weights](https://huggingface.co/stepfun-ai/Step1X-E
 ```
 bash scripts/run_examples.sh
 ```
+The default script runs the inference code with non-quantified weights. If you want to save the GPU memory usage, you can 1）download the FP8 weights and set the `--quantized` flag in the script, or 2) set the `--offload` flag in the script to offload some modules to CPU.
 
-This script runs the inference code on example inputs. The results will look like:
+This default script runs the inference code on example inputs. The results will look like:
 <div align="center">
 <img width="1080" alt="results" src="assets/results_show.png">
 </div>
