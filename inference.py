@@ -428,8 +428,8 @@ def main():
 
     image_edit = ImageGenerator(
         ae_path=os.path.join(args.model_path, 'vae.safetensors'),
-        dit_path=os.path.join(args.model_path, "step1x-edit-i1258-FP8.safetensors" if args.quantized else "step1x-edit-i1258-clean.safetensors"),
-        qwen2vl_model_path=os.path.join(args.model_path, 'Qwen2.5-VL-7B-Instruct'),
+        dit_path=os.path.join(args.model_path, "step1x-edit-i1258-FP8.safetensors" if args.quantized else "step1x-edit-i1258.safetensors"),
+        qwen2vl_model_path=('Qwen/Qwen2.5-VL-7B-Instruct'),
         max_length=640,
         quantized=args.quantized,
         offload=args.offload,

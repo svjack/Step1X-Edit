@@ -102,8 +102,6 @@ The evaluation process and related code can be found in [GEdit-Bench/EVAL.md](GE
 ## 5. Acknowledgement
 We would like to express our sincere thanks to the contributors of [SD3](https://huggingface.co/stabilityai/stable-diffusion-3-medium), [FLUX](https://github.com/black-forest-labs/flux), [Qwen](https://github.com/QwenLM/Qwen2.5), [diffusers](https://github.com/huggingface/diffusers) and [HuggingFace](https://huggingface.co) teams, for their open research and exploration.
 
-We would like to express our sincere thanks to the contributors of [the quant version of Step1X-Edit](https://github.com/rkfg/Step1X-Edit) and [meimeilook/Step1X-Edit-FP8](https://huggingface.co/meimeilook/Step1X-Edit-FP8)
-
 
 ## 6. Disclaimer
 The results produced by this image editing model are entirely determined by user input and actions. The development team and this open-source project are not responsible for any outcomes or consequences arising from its use.
