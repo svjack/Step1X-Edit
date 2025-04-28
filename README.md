@@ -53,7 +53,7 @@ from shutil import copy2
 copy2(result[0][1], result[0][1].split("/")[-1])
 ```
 
-# Xiang to Luffy Deno
+# Xiang to Luffy Demo
 ```python
 import os
 path = "Xiang_InfiniteYou_Handsome_Pics_Captioned"
