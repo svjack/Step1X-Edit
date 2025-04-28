@@ -1,3 +1,36 @@
+```bash
+conda activate system
+
+sudo apt-get update && sudo apt-get install cbm git-lfs ffmpeg
+
+git clone https://github.com/stepfun-ai/Step1X-Edit && cd Step1X-Edit
+pip install -r requirements.txt
+```
+
+```txt
+#torch>=2.3.1
+torch==2.5.1
+torchvision
+https://github.com/Dao-AILab/flash-attention/releases/download/v2.7.4.post1/flash_attn-2.7.4.post1+cu12torch2.5cxx11abiFALSE-cp311-cp311-linux_x86_64.whl
+liger_kernel==0.5.4
+einops==0.8.1
+transformers==4.49.0
+qwen_vl_utils==0.0.10
+safetensors==0.4.5
+pillow==11.1.0
+```
+
+```bash
+wget https://huggingface.co/meimeilook/Step1X-Edit-FP8/resolve/main/step1x-edit-i1258-FP8.safetensors
+wget https://huggingface.co/stepfun-ai/Step1X-Edit/resolve/main/vae.safetensors
+
+python inference.py --input_dir ./examples \
+    --model_path . \
+    --json_path ./examples/prompt_cn.json \
+    --output_dir ./output_cn \
+    --seed 1234 --size_level 1024 --offload --quantized
+```
+
 <div align="center">
   <img src="assets/logo.png"  height=100>
 </div>
