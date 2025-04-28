@@ -8,7 +8,7 @@ pip install -r requirements.txt
 pip install spaces
 pip install -U gradio
 pip install "httpx[socks]"
-pip install gradio_client
+pip install gradio_client datasets
 ```
 
 ```txt
