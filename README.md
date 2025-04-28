@@ -5,7 +5,7 @@
   <a href="https://step1x-edit.github.io/"><img src="https://img.shields.io/static/v1?label=Project%20Page&message=Web&color=green"></a> &ensp;
   <a href="https://arxiv.org/abs/2504.17761"><img src="https://img.shields.io/static/v1?label=Tech%20Report&message=Arxiv&color=red"></a> &ensp;
   <a href="https://www.modelscope.cn/models/stepfun-ai/Step1X-Edit"><img src="https://img.shields.io/static/v1?label=Model&message=ModelScope&color=blue"></a> &ensp;
-  <a href="https://discord.gg/j3qzuAyn"><img src="https://img.shields.io/static/v1?label=Model&message=Discord&color=purple"></a> &ensp;
+  <a href="https://discord.gg/j3qzuAyn"><img src="https://img.shields.io/static/v1?label=Discord%20Channel&message=Discord&color=purple"></a> &ensp;
   
   <a href="https://huggingface.co/stepfun-ai/Step1X-Edit"><img src="https://img.shields.io/static/v1?label=Model&message=HuggingFace&color=yellow"></a> &ensp;
   <a href="https://huggingface.co/spaces/stepfun-ai/Step1X-Edit"><img src="https://img.shields.io/static/v1?label=Online%20Demo&message=HuggingFace&color=yellow"></a> &ensp;
@@ -39,6 +39,7 @@ If you develop/use Step1X-Edit in your projects, welcome to let us know.
 - [x] Inference & Checkpoints
 - [x] Online demo (Gradio)
 - [ ] Diffusers 
+- [ ] Multi-gpus Sequence Parallel inference
 - [x] FP8 Quantified weight
 - [ ] ComfyUI
 
@@ -59,7 +60,7 @@ The following table shows the requirements for running Step1X-Edit model (batch 
 |     Model    |     Peak GPU Memory (512 / 786 / 1024)  | 28 steps w flash-attn(512 / 786 / 1024) |
 |:------------:|:------------:|:------------:|
 | Step1X-Edit   |                42.5GB / 46.5GB / 49.8GB  | 5s / 11s / 22s |
-| Step1X-Edit-FP8   |             31GB / 31.5GB/ 34GB     | 6.8s / 13.5s / 25s | 
+| Step1X-Edit-FP8   |             31GB / 31.5GB / 34GB     | 6.8s / 13.5s / 25s | 
 | Step1X-Edit + offload   |       25.9GB / 27.3GB / 29.1GB | 49.6s / 54.1s / 63.2s |
 | Step1X-Edit-FP8 + offload   |   18GB / 18GB / 18GB | 35s / 40s / 51s |
 
@@ -97,7 +98,7 @@ After downloading the [model weights](https://huggingface.co/stepfun-ai/Step1X-E
 ```
 bash scripts/run_examples.sh
 ```
-The default script runs the inference code with non-quantified weights. If you want to save the GPU memory usage, you can 1）download the FP8 weights and set the `--quantized` flag in the script, or 2) set the `--offload` flag in the script to offload some modules to CPU.
+The default script runs the inference code with non-quantified weights. If you want to save the GPU memory usage, you can 1) download the FP8 weights and set the `--quantized` flag in the script, or 2) set the `--offload` flag in the script to offload some modules to CPU.
 
 This default script runs the inference code on example inputs. The results will look like:
 <div align="center">
