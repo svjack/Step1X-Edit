@@ -53,6 +53,74 @@ from shutil import copy2
 copy2(result[0][1], result[0][1].split("/")[-1])
 ```
 
+# Xiang to Luffy Deno
+```python
+import os
+path = "Xiang_InfiniteYou_Handsome_Pics_Captioned"
+os.makedirs(path, exist_ok= True)
+from datasets import load_dataset
+from uuid import uuid1
+ds = load_dataset("svjack/Xiang_InfiniteYou_Handsome_Pics_Captioned")["train"]
+for item in ds:
+    uuid_name = str(uuid1())
+    item["image"].save(os.path.join(path, "{}.png".format(uuid_name)))
+    with open(os.path.join(path, "{}.txt".format(uuid_name)), "w") as f:
+        f.write(item["joy-caption"])
+
+import os
+from tqdm import tqdm
+from PIL import Image
+from shutil import copy2
+from gradio_client import Client, handle_file
+
+# Set up directories
+input_dir = "Xiang_InfiniteYou_Handsome_Pics_Captioned"
+output_dir = "Xiang_InfiniteYou_Pose_to_Luffy_Step1X_Edit_Captioned"
+os.makedirs(output_dir, exist_ok=True)
+
+# Initialize client
+client = Client("http://localhost:7860")
+
+# Get all .png files in the input directory
+png_files = [f for f in os.listdir(input_dir) if f.endswith('.png')]
+
+# Process each file with tqdm progress bar
+for png_file in tqdm(png_files, desc="Processing images"):
+    # Get the base filename without extension
+    base_name = os.path.splitext(png_file)[0]
+    txt_file = f"{base_name}.txt"
+
+    # Process the image through the API
+    try:
+        result = client.predict(
+            prompt="Transform it into One Piece luffy style",
+            ref_images=handle_file(os.path.join(input_dir, png_file)),
+            seed=-1,
+            size_level=1024,
+            quantized=True,
+            offload=True,
+            api_name="/inference"
+        )
+
+        # Open and save the result image
+        if result and len(result) > 0 and len(result[0]) > 1:
+            img = Image.open(result[0][1])
+            output_img_path = os.path.join(output_dir, png_file)
+            img.save(output_img_path)
+
+            # Copy the corresponding text file
+            input_txt_path = os.path.join(input_dir, txt_file)
+            output_txt_path = os.path.join(output_dir, txt_file)
+            if os.path.exists(input_txt_path):
+                copy2(input_txt_path, output_txt_path)
+
+    except Exception as e:
+        print(f"Error processing {png_file}: {str(e)}")
+        continue
+
+print("Processing complete!")
+```
+
 <div align="center">
   <img src="assets/logo.png"  height=100>
 </div>
