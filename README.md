@@ -7,6 +7,8 @@ git clone https://github.com/stepfun-ai/Step1X-Edit && cd Step1X-Edit
 pip install -r requirements.txt
 pip install spaces
 pip install -U gradio
+pip install "httpx[socks]"
+pip install gradio_client
 ```
 
 ```txt
@@ -31,6 +33,24 @@ python inference.py --input_dir ./examples \
     --json_path ./examples/prompt_cn.json \
     --output_dir ./output_cn \
     --seed 1234 --size_level 1024 --offload --quantized
+
+python gradio_demo.py
+
+from gradio_client import Client, handle_file
+client = Client("http://localhost:7860")
+result = client.predict(
+		prompt="Remove the person from the image.",
+		ref_images=handle_file('023614aa-5b08-4fbe-8f1a-70e7e5642808 (2).png'),
+		seed=-1,
+		size_level=512,
+		quantized=True,
+		offload=True,
+		api_name="/inference"
+)
+print(result)
+
+from shutil import copy2
+copy2(result[0][1], result[0][1].split("/")[-1])
 ```
 
 <div align="center">
