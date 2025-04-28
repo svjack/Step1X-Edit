@@ -5,6 +5,8 @@ sudo apt-get update && sudo apt-get install cbm git-lfs ffmpeg
 
 git clone https://github.com/stepfun-ai/Step1X-Edit && cd Step1X-Edit
 pip install -r requirements.txt
+pip install spaces
+pip install -U gradio
 ```
 
 ```txt
