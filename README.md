@@ -59,7 +59,7 @@ The following table shows the requirements for running Step1X-Edit model (batch 
 |:------------:|:------------:|:------------:|
 | Step1X-Edit   |                42.5GB / 46.5GB / 49.8GB  | 5s / 11s / 22s |
 | Step1X-Edit-FP8   |             31GB / 31.5GB/ 34GB     | 6.8s / 13.5s / 25s | 
-| Step1X-Edit + offload   |       25.9GB / 27.3GB / 29.1GB | 40.6s / 54.1s / 63.2s |
+| Step1X-Edit + offload   |       25.9GB / 27.3GB / 29.1GB | 49.6s / 54.1s / 63.2s |
 | Step1X-Edit-FP8 + offload   |   18GB / 18GB / 18GB | 35s / 40s / 51s |
 
 * The model is tested on one H800 GPUs.
