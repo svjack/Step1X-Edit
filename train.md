@@ -139,3 +139,108 @@ for image_path in tqdm(l):
     image.save(os.path.join("benchmark", image_path.split("/")[-1].replace("original" ,"edit")))
 ```
 
+```bash
+git clone https://huggingface.co/datasets/svjack/Genshin-Impact-Portrait-with-Tags-Filtered-IID-Gender-SP
+
+import os
+import random
+from pathlib import Path
+import glob
+
+def process_folders(base_folder, num_folders=10, samples_per_folder=5):
+    """
+    处理文件夹并生成所需字典
+    
+    参数:
+        base_folder: 基础文件夹路径
+        num_folders: 要处理的子文件夹数量
+        samples_per_folder: 每个子文件夹中抽取的三元组数量
+        
+    返回:
+        生成的字典
+    """
+    # 查找所有符合条件的子文件夹
+    pattern = os.path.join(base_folder, "genshin_impact_*_images_and_texts")
+    matching_folders = glob.glob(pattern)
+    
+    # 随机选择指定数量的子文件夹
+    selected_folders = random.sample(matching_folders, min(num_folders, len(matching_folders)))
+    
+    result_dict = {}
+    
+    for folder in selected_folders:
+        # 获取文件夹中所有png和txt文件
+        png_files = list(Path(folder).glob("*.png"))
+        txt_files = list(Path(folder).glob("*.txt"))
+        
+        # 创建文件名到路径的映射（不带扩展名）
+        txt_map = {f.stem: f for f in txt_files}
+        
+        # 确保有足够的文件可以抽样
+        if len(png_files) < 2 or len(txt_map) < 1:
+            continue
+            
+        # 抽取指定数量的样本
+        for _ in range(samples_per_folder):
+            # 确保有足够的文件可以抽样
+            if len(png_files) < 2 or len(txt_map) < 1:
+                break
+                
+            # 随机选择两个不同的图片
+            img1, img2 = random.sample(png_files, 2)
+            
+            # 检查是否有对应的txt文件
+            if img2.stem in txt_map:
+                # 读取txt文件内容
+                with open(txt_map[img2.stem], 'r', encoding='utf-8') as f:
+                    caption = f.read().strip()
+                
+                # 添加到结果字典
+                result_dict[str(img2.absolute())] = {
+                    'ref_image_path': str(img1.absolute()),
+                    'caption': caption
+                }
+                
+                # 移除已选的文件，避免重复抽样
+                png_files.remove(img1)
+                png_files.remove(img2)
+                del txt_map[img2.stem]
+    
+    return result_dict
+
+# 使用示例
+if __name__ == "__main__":
+    base_folder = "Genshin-Impact-Portrait-with-Tags-Filtered-IID-Gender-SP"
+    num_folders = 32  # 要处理的子文件夹数量
+    samples_per_folder = 32  # 每个子文件夹中抽取的三元组数量
+    
+    result = process_folders(base_folder, num_folders, samples_per_folder)
+    
+    # 打印结果（前几个示例）
+    for i, (k, v) in enumerate(result.items()):
+        if i < 3:  # 只打印前3个作为示例
+            print(f"{k}: {v}")
+    
+    print(f"\n总共处理了 {len(result)} 个三元组")
+
+import json 
+with open("change_meta.json", "w") as f:
+    json.dump(result, f)
+
+accelerate launch  --mixed_precision bf16 --num_cpu_threads_per_process 1 --num_processes 1 \
+--config_file ./library/accelerate_config.yaml \
+finetuning.py \
+--pretrained_model_name_or_path step1x-edit-i1258.safetensors \
+--qwen2p5vl Qwen2.5-VL-7B-Instruct \
+--ae vae.safetensors \
+--cache_latents_to_disk --save_model_as safetensors --sdpa --persistent_data_loader_workers \
+--max_data_loader_n_workers 2 --seed 42 --gradient_checkpointing --mixed_precision bf16 --save_precision bf16 \
+--network_module library.lora_module --network_dim 64 --network_alpha 32 --network_train_unet_only \
+--optimizer_type adamw8bit --learning_rate 1e-4 \
+--cache_text_encoder_outputs --cache_text_encoder_outputs_to_disk \
+--highvram --max_train_epochs 100 --save_every_n_steps 500 --dataset_config step1x_edit.toml \
+--output_dir change_output \
+--output_name step1x-edit_change \
+--timestep_sampling shift --discrete_flow_shift 3.1582 --model_prediction_type raw --guidance_scale 1.0 --fp8_base
+
+```
