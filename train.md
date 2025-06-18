@@ -96,3 +96,46 @@ finetuning.py \
 --output_name step1x-edit_rm_text \
 --timestep_sampling shift --discrete_flow_shift 3.1582 --model_prediction_type raw --guidance_scale 1.0 --fp8_base
 ```
+
+### inference
+```python
+from inference import *
+
+image_edit = ImageGenerator(
+        ae_path="vae.safetensors",
+        dit_path="step1x-edit-i1258.safetensors",
+        qwen2vl_model_path='Qwen2.5-VL-7B-Instruct',
+        max_length=640,
+        quantized=True,
+        offload=True,
+        lora="rm_text_output/step1x-edit_rm_text-000025.safetensors",
+        mode="flash"
+    )
+
+import pandas as pd
+import pathlib 
+from tqdm import tqdm
+import os
+os.makedirs("benchmark", exist_ok= True)
+l = pd.Series(list(pathlib.Path("../OWLSAM/").rglob("*original*.png"))).map(str).values.tolist()
+for image_path in tqdm(l):
+    num_steps = 28
+    cfg_guidance = 4.5
+    seed  = 42
+    size_level = 512
+    #size_level = 768
+    #size_level = 1024
+    image = image_edit.generate_image(
+                prompt,
+                negative_prompt="",
+                ref_images=Image.open(image_path).convert("RGB"),
+                num_samples=1,
+                num_steps=num_steps,
+                cfg_guidance=cfg_guidance,
+                seed=seed,
+                show_progress=True,
+                size_level=size_level,
+            )[0]
+    image.save(os.path.join("benchmark", image_path.split("/")[-1].replace("original" ,"edit")))
+```
+
