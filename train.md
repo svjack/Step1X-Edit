@@ -139,6 +139,8 @@ for image_path in tqdm(l):
     image.save(os.path.join("benchmark", image_path.split("/")[-1].replace("original" ,"edit")))
 ```
 
+### Genshin impact anime style
+
 ```bash
 git clone https://huggingface.co/datasets/svjack/Genshin-Impact-Portrait-with-Tags-Filtered-IID-Gender-SP
 
